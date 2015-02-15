@@ -54,13 +54,12 @@ void checkHR() {
   int hr_stop = s.indexOf(",\"remaining");
   int hr = s.substring(hr_start, hr_stop).toInt();
   heart_rate = min(max(40, hr), 120);
-  Serial.println(heart_rate);
+  //Serial.println(heart_rate);
   
   int rem_start = s.indexOf("remaining") + 11;
   int rem_stop = s.indexOf("}");
   int rem = s.substring(rem_start, rem_stop).toInt();
-  Serial.println(s.substring(rem_start, rem_stop));
-  Serial.println(rem);
+  //Serial.println(rem);
 
 }
 
