@@ -66,5 +66,5 @@ void checkHR() {
 void loop() {
   checkHR();
   sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
-  delay(500);
+  delay(150);
 }
