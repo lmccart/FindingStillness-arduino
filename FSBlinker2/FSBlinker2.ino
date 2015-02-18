@@ -7,6 +7,11 @@
 const uint8_t DEFAULT_SENSITIVITY = 120; // 15-120
 const uint8_t DEFAULT_COUNTS = 2; // 1-5 (repeat 7-beat pattern)
 int heart_rate = 100; // rate 40-150
+int flash_time = 5000;
+float flash_start = 0;
+bool flashing = false;
+
+int mode = 0; // 0 - off, 1 - pinging, 2 - flashing
 
 String url = "http://findingstillness.herokuapp.com/get_update";
 
@@ -61,12 +66,26 @@ void checkHR() {
     int rem_stop = s.indexOf("}");
     int rem = s.substring(rem_start, rem_stop).toInt();
     //Serial.println(rem);
+
+    if (rem == 0) {
+      flashing = true;
+      flash_start = millis();
+      Serial.println("flash on");
+    }
   }
 
 }
 
 void loop() {
-  //checkHR();
+  if (flashing && millis() - flash_start >= flash_time) {
+    flashing = false;
+    Serial.println("flash off");
+    delay(10000);
+  }
+  if (!flashing) {
+    Serial.println("pinging");
+    checkHR();
+  }
   sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
   delay(150);
 }
