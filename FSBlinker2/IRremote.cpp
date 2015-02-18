@@ -17,8 +17,8 @@
  * LG added by Darryl Smith (based on the JVC protocol)
  */
 
-#include "IRremote2.h"
-#include "IRremoteInt2.h"
+#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // Provides ISR
 #include <avr/interrupt.h>
@@ -278,8 +278,6 @@ void IRsend::enableIROut(int khz) {
   
   // Disable the Timer2 Interrupt (which is used for receiving IR)
   TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
-  
-  Serial.println(TIMER_PWM_PIN);
   pinMode(TIMER_PWM_PIN, OUTPUT);
   digitalWrite(TIMER_PWM_PIN, LOW); // When not sending PWM, we want it low
   

@@ -24,4 +24,3 @@ void updateCRC(uint8_t data) {
     }
   }
 }
-

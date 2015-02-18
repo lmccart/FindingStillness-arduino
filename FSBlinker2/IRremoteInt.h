@@ -262,15 +262,15 @@ extern volatile irparams_t irparams;
   TCNT2 = 0; \
 })
 #endif
-#if defined(CORE_OC2B_PIN)
-#define TIMER_PWM_PIN        CORE_OC2B_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define TIMER_PWM_PIN        9  /* Arduino Mega */
-#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-#define TIMER_PWM_PIN        14 /* Sanguino */
-#else
+//#if defined(CORE_OC2B_PIN)
+//#define TIMER_PWM_PIN        CORE_OC2B_PIN  /* Teensy */
+//#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+//#define TIMER_PWM_PIN        9  /* Arduino Mega */
+//#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+//#define TIMER_PWM_PIN        14 /* Sanguino */
+//#else
 #define TIMER_PWM_PIN        3  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
-#endif
+//#endif
 
 
 // defines for timer1 (16 bits)
@@ -304,7 +304,7 @@ extern volatile irparams_t irparams;
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        11  /* Arduino Mega */
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-#define TIMER_PWM_PIN        13 /* Sanguino */
+#define TIMER_PWM_PIN        3//13 /* Sanguino */
 #else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
@@ -374,7 +374,7 @@ extern volatile irparams_t irparams;
 #if defined(CORE_OC4A_PIN)
 #define TIMER_PWM_PIN        CORE_OC4A_PIN  /* Teensy */
 #elif defined(__AVR_ATmega32U4__)
-#define TIMER_PWM_PIN        13  /* Leonardo */
+#define TIMER_PWM_PIN        3//13  /* Leonardo */
 #else
 #error "Please add OC4A pin number here\n"
 #endif
