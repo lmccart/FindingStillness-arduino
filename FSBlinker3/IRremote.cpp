@@ -277,8 +277,8 @@ void IRsend::enableIROut(int khz) {
 
   
   // Disable the Timer2 Interrupt (which is used for receiving IR)
-  //Serial.println(TIMER_PWM_PIN);
   TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
+  
   pinMode(TIMER_PWM_PIN, OUTPUT);
   digitalWrite(TIMER_PWM_PIN, LOW); // When not sending PWM, we want it low
   

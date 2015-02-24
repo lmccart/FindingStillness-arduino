@@ -44,6 +44,21 @@ void sendHeartbeatParameters(uint8_t rate, uint8_t counts, uint8_t sensitivity) 
   irsend.sendNEC(data, 32); // NEC code
 }
 
+void sendBlank() {
+  resetCRC();
+//  updateCRC(rate);
+//  updateCRC(counts);
+//  updateCRC(sensitivity);
+
+  long data = 0;
+//  data |= ((long)rate)        << 24;
+//  data |= ((long)counts)      << 16;
+//  data |= ((long)sensitivity) << 8;
+  data |= (getCRC());
+
+  irsend.sendNEC(data, 32); // NEC code
+}
+
 void checkHR() {
 
   Process p;
@@ -102,7 +117,9 @@ void loop() {
       checkHR();
       Serial.println("pinging");
     }
+    sendBlank();
+  } else {
+    sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
   }
-  sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
   delay(150);
 }
