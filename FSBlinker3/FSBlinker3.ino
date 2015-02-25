@@ -109,8 +109,8 @@ void loop() {
       Serial.println("flash off");
       delay(10 * 1000); // get out of room
     }
-  }
-  if (!flashing) {
+    sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
+  } else {
     int m = millis();
     if (m - last_ping > ping_interval) {
       last_ping = m;
@@ -118,8 +118,6 @@ void loop() {
       Serial.println("pinging");
     }
     sendBlank();
-  } else {
-    sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
   }
   delay(150);
 }

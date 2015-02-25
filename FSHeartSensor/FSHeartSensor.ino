@@ -4,8 +4,8 @@
 int hr = 80;
 String url = "http://findingstillness.herokuapp.com/send_heartrate?hr=";
 
-int pulse_pin = 2;
-int contact_pin = 3;
+int contact_pin = 2;
+int pulse_pin = 3;
 
 void setup() {
   //Bridge.begin();
@@ -32,11 +32,11 @@ void loop() {
 //    Serial.print(c);
 //  }
 
-  int pulse = digitalRead(pulse_pin);
   int contact = digitalRead(contact_pin);
-  Serial.print(pulse);
+  int pulse = digitalRead(pulse_pin);
+  Serial.print(contact);
   Serial.print(" ");
-  Serial.println(contact);
+  Serial.println(pulse);
   delay(100);
 
 }
