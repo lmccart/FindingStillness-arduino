@@ -7,12 +7,12 @@
 const uint8_t DEFAULT_SENSITIVITY = 120; // 15-120
 const uint8_t DEFAULT_COUNTS = 1; // 1-5 (repeat 7-beat pattern)
 int heart_rate = 150; // rate 40-150
-int flash_time = 5000;
-int flash_start = 0;
+unsigned long flash_time = 5000;
+unsigned long flash_start = 0;
 bool flashing = false;
 bool waitingForFlash = false;
-int ping_interval = 3000;
-int last_ping = 0;
+unsigned long ping_interval = 3000;
+unsigned long last_ping = 0;
 
 int mode = 0; // 0 - off, 1 - pinging, 2 - flashing
 
@@ -111,7 +111,7 @@ void loop() {
     }
     sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
   } else {
-    int m = millis();
+    unsigned long m = millis();
     if (m - last_ping > ping_interval) {
       last_ping = m;
       checkHR();
