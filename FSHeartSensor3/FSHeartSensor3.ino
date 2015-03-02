@@ -7,8 +7,8 @@ float heartRateBpmMin = 50;
 float heartRateBpmMax = 140;
 float heartRateBpm = 0;
 
-String hr_url = "http://stillness.local:3000/send_heartrate?hr=";
-String contact_url = "http://stillness.local:3000/start";
+String hr_url = "http://10.0.1.2:3000/send_heartrate?hr=";
+String contact_url = "http://10.0.1.2:3000/start";
 
 unsigned long ping_interval = 3000;
 unsigned long last_ping = 0;
