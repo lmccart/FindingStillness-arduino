@@ -2,8 +2,8 @@
 #include <Process.h>
 #include "RunningMedian.h"
 
-String hr_url = "http://192.168.3.1:3000/send_heartrate?hr=";
-String contact_url = "http://192.168.3.1:3000/start";
+String hr_url = "http://192.168.2.10:3000/send_heartrate?hr=";
+String contact_url = "http://192.168.2.10:3000/start";
 
 unsigned long ping_interval = 3000;
 unsigned long last_ping = 0;
@@ -141,13 +141,12 @@ void sendContact() {
   p.addParameter("-i");
   p.run();
   
-  
-  String s = "";
-  while (p.available() > 0) {
-    char c = p.read();
-    s += c;
-  }
-  Serial.println(s);
+//  String s = "";
+//  while (p.available() > 0) {
+//    char c = p.read();
+//    s += c;
+//  }
+//  Serial.println(s);
 }
 
 void sendHR() {
@@ -158,11 +157,11 @@ void sendHR() {
   p.addParameter("-i");
   p.run();
 
-  String s = "";
-  while (p.available() > 0) {
-    char c = p.read();
-    s += c;
-  }
-  Serial.println(s);
+//  String s = "";
+//  while (p.available() > 0) {
+//    char c = p.read();
+//    s += c;
+//  }
+//  Serial.println(s);
 
 }
