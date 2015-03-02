@@ -5,9 +5,9 @@
 #include "crc.h"
 
 const uint8_t DEFAULT_SENSITIVITY = 20; // 15-120
-const uint8_t DEFAULT_COUNTS = 1; // 1-5 (repeat 7-beat pattern)
-int heart_rate = 60; // rate 40-150
-unsigned long flash_time = 2000;
+int DEFAULT_COUNTS = 1; // 1-5 (repeat 7-beat pattern)
+int heart_rate = 60; // rate 50-150
+unsigned long flash_time = 3000;
 unsigned long flash_start = 0;
 bool flashing = false;
 bool waitingForFlash = false;
@@ -16,13 +16,14 @@ unsigned long last_ping = 0;
 
 int mode = 0; // 0 - off, 1 - pinging, 2 - flashing
 
-String url = "http://192.168.3.1:3000/get_update";
+String url = "http://192.168.2.10:3000/get_update";
 
 IRsend irsend;
 
 void setup() {
   Bridge.begin();
   Serial.begin(9600);
+  Serial.println("powered up");
 }
 
 void sendHeartbeatParameters(uint8_t rate, uint8_t counts, uint8_t sensitivity) {
@@ -72,13 +73,13 @@ void checkHR() {
     char c = p.read();
     s += c;
   }
-  Serial.println(s);
+  //Serial.println(s);
   int hr_start = s.indexOf("hr") + 4;
   if (hr_start != 3) {
     int hr_stop = s.indexOf(",\"remaining");
     int hr = s.substring(hr_start, hr_stop).toInt();
-    heart_rate = min(max(40, hr), 120);
-    //Serial.println(heart_rate);
+    heart_rate = min(max(50, hr), 140);
+    Serial.println(heart_rate);
 
     int rem_start = s.indexOf("remaining") + 11;
     int rem_stop = s.indexOf("}");
@@ -100,6 +101,14 @@ void checkHR() {
 }
 
 void loop() {
+  if (heart_rate < 100) {
+    DEFAULT_COUNTS = 1;
+  } else {
+    DEFAULT_COUNTS = 2;
+  }
+  Serial.print(DEFAULT_COUNTS);
+  Serial.print(" ");
+  Serial.println(heart_rate);
   if (flashing) {
     int m = millis();
     if (m - flash_start >= flash_time) {
@@ -117,7 +126,8 @@ void loop() {
       checkHR();
       Serial.println("pinging");
     }
-    sendBlank();
+    //sendBlank();
+    sendHeartbeatParameters(heart_rate, DEFAULT_COUNTS, DEFAULT_SENSITIVITY);
   }
   delay(150);
 }
