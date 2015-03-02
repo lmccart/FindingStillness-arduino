@@ -4,10 +4,10 @@
 #include "IRremote.h"
 #include "crc.h"
 
-const uint8_t DEFAULT_SENSITIVITY = 120; // 15-120
+const uint8_t DEFAULT_SENSITIVITY = 20; // 15-120
 const uint8_t DEFAULT_COUNTS = 1; // 1-5 (repeat 7-beat pattern)
-int heart_rate = 150; // rate 40-150
-unsigned long flash_time = 5000;
+int heart_rate = 60; // rate 40-150
+unsigned long flash_time = 2000;
 unsigned long flash_start = 0;
 bool flashing = false;
 bool waitingForFlash = false;
@@ -16,7 +16,7 @@ unsigned long last_ping = 0;
 
 int mode = 0; // 0 - off, 1 - pinging, 2 - flashing
 
-String url = "http://findingstillness.herokuapp.com/get_update";
+String url = "http://192.168.3.1:3000/get_update";
 
 IRsend irsend;
 
@@ -72,7 +72,7 @@ void checkHR() {
     char c = p.read();
     s += c;
   }
-  //Serial.println(s);
+  Serial.println(s);
   int hr_start = s.indexOf("hr") + 4;
   if (hr_start != 3) {
     int hr_stop = s.indexOf(",\"remaining");

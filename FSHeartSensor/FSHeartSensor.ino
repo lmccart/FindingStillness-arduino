@@ -1,8 +1,9 @@
+
 #include <Process.h>
 #include "RunningMedian.h"
 
-String hr_url = "http://findingstillness.herokuapp.com/send_heartrate?hr=";
-String contact_url = "http://findingstillness.herokuapp.com/start";
+String hr_url = "http://192.168.3.1:3000/send_heartrate?hr=";
+String contact_url = "http://192.168.3.1:3000/start";
 
 unsigned long ping_interval = 3000;
 unsigned long last_ping = 0;
@@ -21,7 +22,7 @@ int play_count = 1; // Incremented every play for statistics only
 
 // Setup for the heart beat timings
 RunningMedian beat_samples = RunningMedian(100);
-RunningMedian contact_samples = RunningMedian(1000);
+RunningMedian contact_samples = RunningMedian(5000);
 int average = 0;
 int median = 0;
 
@@ -54,13 +55,17 @@ void loop() {
   // Check send hr
   cur_time = millis();
   if (cur_time - last_ping > ping_interval) {
-    sendHR();
+    //sendHR();
     last_ping = cur_time;
   }
   
   // Check for heartbeat
   bpm = (target_bpm - bpm) * easing + bpm;
   pulse_read = digitalRead(pulse_pin);
+//  Serial.print(pulse_read);
+//  Serial.print(" ");
+//  Serial.println(contact_read);
+//  
   if (pulse_read != prev_pulse) handle_pulse();
 
   // Check for contact
@@ -69,7 +74,6 @@ void loop() {
     last_contact_time = contact_time;
     contact_read = digitalRead(contact_pin);
     contact_samples.add(contact_read);
-    Serial.println(contact_samples.getAverage());
     contact = contact_samples.getAverage() > 0.5 ? 1 : 0;
     if (contact != prev_contact) handle_contact();
   }
@@ -81,7 +85,7 @@ void handle_contact() {
   Serial.print("contact ");
   Serial.println(contact);
   if (contact == 1) {
-    sendContact();
+    //sendContact();
   } else {
     contact_samples.clear();
   }
@@ -136,6 +140,14 @@ void sendContact() {
   p.addParameter(contact_url);
   p.addParameter("-i");
   p.run();
+  
+  
+  String s = "";
+  while (p.available() > 0) {
+    char c = p.read();
+    s += c;
+  }
+  Serial.println(s);
 }
 
 void sendHR() {
@@ -146,11 +158,11 @@ void sendHR() {
   p.addParameter("-i");
   p.run();
 
-  //  String s = "";
-  //  while (p.available() > 0) {
-  //    char c = p.read();
-  //    s += c;
-  //  }
-  //  Serial.println(s);
+  String s = "";
+  while (p.available() > 0) {
+    char c = p.read();
+    s += c;
+  }
+  Serial.println(s);
 
 }
