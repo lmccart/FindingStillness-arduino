@@ -16,7 +16,7 @@ unsigned long last_ping = 0;
 
 int mode = 0; // 0 - off, 1 - pinging, 2 - flashing
 
-String url = "http://stillness.local:3000/get_update";
+String url = "http://10.0.1.2:3000/get_update";
 
 IRsend irsend;
 
@@ -73,7 +73,7 @@ void checkHR() {
     char c = p.read();
     s += c;
   }
-  //Serial.println(s);
+  // Serial.println(s);
   int hr_start = s.indexOf("hr") + 4;
   if (hr_start != 3) {
     int hr_stop = s.indexOf(",\"remaining");
