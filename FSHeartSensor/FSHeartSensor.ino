@@ -2,8 +2,8 @@
 #include <Process.h>
 #include "RunningMedian.h"
 
-String hr_url = "http://192.168.2.10:3000/send_heartrate?hr=";
-String contact_url = "http://192.168.2.10:3000/start";
+String hr_url = "http://stillness.local:3000/send_heartrate?hr=";
+String contact_url = "http://stillness.local:3000/start";
 
 unsigned long ping_interval = 3000;
 unsigned long last_ping = 0;
