@@ -15,7 +15,6 @@ static float highPassFilter(float input) {
     + (  4.4918309651 * yv[4]);
     return yv[5];
 }
-
 static float lerp(float x, float y, float t) {
     return x*(1-t) + y*(t);
 }
@@ -79,12 +78,11 @@ static bool rateLimitedPeakFilter(bool input) {
     }
 }
 
-const float minBpm = 30, maxBpm = 150;
 bool rangeFilter(float input) {
     static const int count = 3;
     static float recent[count];
     static const float range = 2.;
-    if(input < minBpm || input > maxBpm) {
+    if(input < heartRateBpmMin || input > heartRateBpmMax) {
         return false;
     }
     int inRange = 0;
@@ -97,6 +95,7 @@ bool rangeFilter(float input) {
     recent[count - 1] = input;
     return (inRange + 1 >= count);
 }
+
 float bpmFilter(unsigned long timeMs) {
     static unsigned long previousTimeMs = 0;
     float curBpm = (60. * 1000.) / (timeMs - previousTimeMs);
@@ -104,7 +103,7 @@ float bpmFilter(unsigned long timeMs) {
     return curBpm;
 }
 
-bool heartbeatFilter(float x, unsigned long timeMs) {
+bool heartbeatFilter(float x, unsigned long timeMs, float& heartRateBpm) {
     static derivativeFilter derivativea, derivativeb;
     static agcDoubleFilter agca;
     static  agcSingleFilter agcb;
@@ -135,6 +134,8 @@ bool heartbeatFilter(float x, unsigned long timeMs) {
         x = prevBpm;
     }
     smoothBpm = lerp(smoothBpm, x, .005);
+    if(beat) {
+      heartRateBpm = smoothBpm;
+    }
     return beat;
-//    return smoothBpm;
 }

@@ -40,9 +40,9 @@ void resetTimer() {
 
 void loop() {
   
-//  Serial.print(analogRead(pressurePin0));
-//  Serial.print(" ");
-//  Serial.println(analogRead(pressurePin1));
+  Serial.print(analogRead(pressurePin0));
+  Serial.print(" ");
+  Serial.println(analogRead(pressurePin1));
   
   int n = analogRead(pressurePin0) + analogRead(pressurePin1);
 //  Serial.println(n);
