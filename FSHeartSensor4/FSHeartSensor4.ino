@@ -1,4 +1,5 @@
 #include <Process.h>
+#include <HttpClient.h>
 
 #define mains 60 // 60: north america, japan; 50: most other places
 #define refresh 1000000 / mains // power cycle wavelength in microseconds
@@ -10,6 +11,7 @@ float heartRateBpmMin = 50;
 float heartRateBpmMax = 140;
 float heartRateBpm = 60;
 
+      
 struct ContactFilter {
   float lowPass = 0;
   float contactThreshold = 100;
@@ -36,6 +38,8 @@ String contact_url = "http://10.0.1.2:3000/start";
 unsigned long ping_interval = 1000;
 unsigned long last_ping = 0;
 unsigned long cur_time = 0;
+
+Process p;
 
 void setup() {
   Bridge.begin();
@@ -72,7 +76,6 @@ void loop() {
     unsigned long curHeartbeatMs = millis();
     heartbeatFilter(cur, curHeartbeatMs, heartRateBpm);
   }
-  
   sendHR();
 }
 
@@ -82,19 +85,18 @@ void sendContact() {
   p.begin("curl");
   p.addParameter(contact_url);
   p.addParameter("-i");
-  p.runAsynchronously();
+  p.run();
 }
 
 void sendHR() {
-  cur_time = millis();  
+  cur_time = millis();
   if (cur_time - last_ping > ping_interval) {
+    heartRateBpm = random(10, 100);
     last_ping = cur_time;
     Serial.println("send hr");
     Serial.println(heartRateBpm);
-    Process p;
     p.begin("curl");
     p.addParameter(hr_url + heartRateBpm);
-    p.addParameter("-i");
     p.runAsynchronously();
   }
 }

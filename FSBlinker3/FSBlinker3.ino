@@ -101,14 +101,7 @@ void checkHR() {
 }
 
 void loop() {
-  if (heart_rate < 100) {
-    DEFAULT_COUNTS = 1;
-  } else {
-    DEFAULT_COUNTS = 2;
-  }
-  Serial.print(DEFAULT_COUNTS);
-  Serial.print(" ");
-  Serial.println(heart_rate);
+  // Serial.println(heart_rate);
   if (flashing) {
     int m = millis();
     if (m - flash_start >= flash_time) {
