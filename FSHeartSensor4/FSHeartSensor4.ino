@@ -71,10 +71,9 @@ void loop() {
   }
   sendHR();
 }
-
+  
 void sendContact() {
   Serial.println("send contact");
-  Process p;
   p.begin("curl");
   p.addParameter(contact_url);
   p.addParameter("-i");

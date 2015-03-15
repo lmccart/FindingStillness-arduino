@@ -61,9 +61,9 @@ void sendBlank() {
   irsend.sendNEC(data, 32); // NEC code
 }
 
+Process p;
+  
 void checkHR() {
-
-  Process p;
   p.begin("curl");
   p.addParameter(url);
   p.addParameter("-i");
