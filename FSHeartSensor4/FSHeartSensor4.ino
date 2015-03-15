@@ -5,9 +5,11 @@
 #define refresh 1000000 / mains // power cycle wavelength in microseconds
 int analogPin = 0;
 
-float leftThreshold = 610, rightThreshold = 660;
+const float leftAverage = 769, rightAverage = 863;
+const float threshold = 100;
 int leftPin = 2, rightPin = 1;
-float contactSlow = 0;
+int contactCount = 0;
+int contactThreshold = 10;
 unsigned long lastContact = 0;
 unsigned long contactDelay = 1000;
 
@@ -27,11 +29,11 @@ Process p;
 void setup() {
   Bridge.begin();
   Serial.begin(115200);
-  wdt_enable(WDTO_8S); // restart if we don't call wdt_reset() every 8 seconds
   pinMode(analogPin, INPUT);
   pinMode(leftPin, INPUT);
   pinMode(rightPin, INPUT);
   resetTimer();
+  wdt_enable(WDTO_8S); // restart if we don't call wdt_reset() every 8 seconds
 }
 
 unsigned long lastTime = 0, nextTime = 0;
@@ -43,19 +45,22 @@ void resetTimer() {
 
 void loop() {
   wdt_reset();
-  
   unsigned long curTime = millis();
-  if(curTime - lastContact > contactDelay) {
+  if (curTime - lastContact > contactDelay) {
     int left = analogRead(leftPin);
     int right = analogRead(rightPin);
-    float contact = (left > leftThreshold) && (right > rightThreshold);
-    contactSlow = .5*contactSlow + .5*(contact ? 1 : 0);
-    if(contactSlow > .999) {
+    bool contact = left > (leftAverage + threshold) && right > (rightAverage + threshold);
+    if (contact) {
+      contactCount++;
+    } else {
+      contactCount = 0;
+    }
+    if (contactCount > contactThreshold) {
       sendContact();
       lastContact = curTime;
     }
   }
-  
+
   // this is the sensing loop
   unsigned long count = 0, total = 0;
   while (micros() < nextTime) {
@@ -63,7 +68,7 @@ void loop() {
     total++;
   }
   resetTimer(); // this must be immediately after the loop
-  
+
   if (total > 0 && count > 0) {
     float cur = count / total;
     unsigned long curHeartbeatMs = millis();
@@ -71,13 +76,12 @@ void loop() {
   }
   sendHR();
 }
-  
+
 void sendContact() {
   Serial.println("send contact");
   p.begin("curl");
   p.addParameter(contact_url);
-  p.addParameter("-i");
-  p.run();
+  p.runAsynchronously();
 }
 
 void sendHR() {
