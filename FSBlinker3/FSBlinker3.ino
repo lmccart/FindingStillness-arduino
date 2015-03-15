@@ -1,4 +1,4 @@
-
+#include <avr/wdt.h>
 #include <Process.h>
 
 #include "IRremote.h"

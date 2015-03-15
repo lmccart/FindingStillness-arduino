@@ -1,3 +1,4 @@
+#include <avr/wdt.h>
 #include <Process.h>
 
 #define mains 60 // 60: north america, japan; 50: most other places
