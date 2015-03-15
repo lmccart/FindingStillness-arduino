@@ -5,10 +5,10 @@
 #include "crc.h"
 
 const uint8_t DEFAULT_SENSITIVITY = 100; // 15-120
-const uint8_t DEFAULT_COUNTS = 3; // 1-5 (repeat 7-beat pattern)
+const uint8_t DEFAULT_COUNTS = 5; // 1-5 (repeat 7-beat pattern)
 // rate 40-150
 String url = "http://findingstillness.herokuapp.com/get_update";
-int heart_rate = 140;
+int heart_rate = 50;
 
 IRsend irsend;
 

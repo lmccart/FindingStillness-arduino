@@ -16,7 +16,7 @@ unsigned long last_ping = 0;
 
 int mode = 0; // 0 - off, 1 - pinging, 2 - flashing
 
-String url = "http://10.0.1.2:3000/get_update";
+String url = "http://10.0.1.2:3000/get_update?arduino=1";
 
 IRsend irsend;
 
