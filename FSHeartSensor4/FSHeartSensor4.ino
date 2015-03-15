@@ -1,36 +1,18 @@
 #include <Process.h>
-#include <HttpClient.h>
 
 #define mains 60 // 60: north america, japan; 50: most other places
 #define refresh 1000000 / mains // power cycle wavelength in microseconds
 int analogPin = 0;
-int pressurePin0 = 1;
-int pressurePin1 = 2;
+
+float leftThreshold = 610, rightThreshold = 660;
+int leftPin = 2, rightPin = 1;
+float contactSlow = 0;
+unsigned long lastContact = 0;
+unsigned long contactDelay = 1000;
 
 float heartRateBpmMin = 50;
 float heartRateBpmMax = 140;
 float heartRateBpm = 60;
-
-      
-struct ContactFilter {
-  float lowPass = 0;
-  float contactThreshold = 100;
-  unsigned long contactDelay = 1000;
-  unsigned long lastContact = 0;
-  bool run(float x) {
-    unsigned long curTime = millis();
-    lowPass = lerp(lowPass, x, .1);
-    float highPass = x - lowPass;
-    bool contactStatus = highPass > contactThreshold;
-    if(contactStatus) {
-      if(curTime - lastContact > contactDelay) {
-        lastContact = curTime;
-        return true;
-      }
-    }
-    return false;
-  }
-} contactFilter;
 
 String hr_url = "http://10.0.1.2:3000/send_heartrate?hr=";
 String contact_url = "http://10.0.1.2:3000/start";
@@ -44,9 +26,10 @@ Process p;
 void setup() {
   Bridge.begin();
   Serial.begin(115200);
+  wdt_enable(WDTO_8S); // restart if we don't call wdt_reset() every 8 seconds
   pinMode(analogPin, INPUT);
-  pinMode(pressurePin0, INPUT);
-  pinMode(pressurePin1, INPUT);
+  pinMode(leftPin, INPUT);
+  pinMode(rightPin, INPUT);
   resetTimer();
 }
 
@@ -57,10 +40,19 @@ void resetTimer() {
   // this will have a brief phase glitch on the ~1 hour 11 minutes mark
 }
 
-void loop() {  
-  int contact = analogRead(pressurePin0) + analogRead(pressurePin1);
-  if(contactFilter.run(contact)) {
-    sendContact();
+void loop() {
+  wdt_reset();
+  
+  unsigned long curTime = millis();
+  if(curTime - lastContact > contactDelay) {
+    int left = analogRead(leftPin);
+    int right = analogRead(rightPin);
+    float contact = (left > leftThreshold) && (right > rightThreshold);
+    contactSlow = .5*contactSlow + .5*(contact ? 1 : 0);
+    if(contactSlow > .999) {
+      sendContact();
+      lastContact = curTime;
+    }
   }
   
   // this is the sensing loop

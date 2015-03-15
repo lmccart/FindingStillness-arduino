@@ -23,6 +23,7 @@ IRsend irsend;
 void setup() {
   Bridge.begin();
   Serial.begin(9600);
+  wdt_enable(WDTO_8S); // restart if we don't call wdt_reset() every 8 seconds
   Serial.println("powered up");
 }
 
@@ -101,6 +102,8 @@ void checkHR() {
 }
 
 void loop() {
+  wdt_reset();
+  
   // Serial.println(heart_rate);
   if (flashing) {
     int m = millis();
