@@ -6,7 +6,7 @@
 int analogPin = 0;
 
 const float leftAverage = 769, rightAverage = 863;
-const float threshold = 100;
+const float threshold = 50; // originally 100, judd thought it was too hard
 int leftPin = 2, rightPin = 1;
 int contactCount = 0;
 int contactThreshold = 10;
@@ -33,7 +33,7 @@ void setup() {
   pinMode(leftPin, INPUT);
   pinMode(rightPin, INPUT);
   resetTimer();
-  wdt_enable(WDTO_8S); // restart if we don't call wdt_reset() every 8 seconds
+//  wdt_enable(WDTO_8S); // restart if we don't call wdt_reset() every 8 seconds
 }
 
 unsigned long lastTime = 0, nextTime = 0;
@@ -42,9 +42,9 @@ void resetTimer() {
   nextTime = lastTime + refresh;
   // this will have a brief phase glitch on the ~1 hour 11 minutes mark
 }
-
+   
 void loop() {
-  wdt_reset();
+//  wdt_reset();
   unsigned long curTime = millis();
   if (curTime - lastContact > contactDelay) {
     int left = analogRead(leftPin);
